@@ -39,6 +39,7 @@ const CustomerStep = () => {
             stateCode: (row.state_code as string) || '',
             pendingAmount: Number(row.pending_amount || 0),
             lastTransaction: row.last_transaction as string | undefined,
+            phone: (row.phone as string) || undefined,
           })),
         );
       } catch {
@@ -91,6 +92,9 @@ const CustomerStep = () => {
             last_transaction: c.lastTransaction
               ? new Date(c.lastTransaction).toISOString()
               : null,
+            // phone column is optional in DB; if it does not exist this will error
+            // and we will fall back to in-memory storage.
+            phone: c.phone,
           })
           .select('*')
           .single();
@@ -232,9 +236,18 @@ const CustomerStep = () => {
                   <div className="space-y-1 text-sm">
                     <p className="font-semibold">{company.name}</p>
                     <p className="text-muted-foreground">
-                      Contact: <span className="font-mono text-xs">N/A</span>
+                      Contact:{' '}
+                      <span className="font-mono text-xs">
+                        {company.phone || 'N/A'}
+                      </span>
                     </p>
                     <p className="text-muted-foreground">{company.address}</p>
+                    <p className="text-xs text-muted-foreground">
+                      Previous Balance:{' '}
+                      <span className="font-mono">
+                        ₹{(company.pendingAmount ?? 0).toFixed(2)}
+                      </span>
+                    </p>
                   </div>
                 )}
               </CardContent>

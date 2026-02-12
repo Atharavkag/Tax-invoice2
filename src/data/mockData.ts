@@ -17,6 +17,7 @@ export interface Company {
   stateCode: string;
   pendingAmount: number;
   lastTransaction?: string;
+  phone?: string;
 }
 
 export interface InvoiceItem {
@@ -47,8 +48,9 @@ export const companies: Company[] = [
     address: '123, Industrial Area, Sector 5',
     state: 'Maharashtra',
     stateCode: '27',
-    pendingAmount: 125000,
+    pendingAmount: 2000,
     lastTransaction: '2025-01-15',
+    phone: '+91 90000 00001',
   },
   {
     id: '2',
@@ -57,8 +59,9 @@ export const companies: Company[] = [
     address: '456, Business Park, Phase 2',
     state: 'Karnataka',
     stateCode: '29',
-    pendingAmount: 0,
+    pendingAmount: 2000,
     lastTransaction: '2025-01-28',
+    phone: '+91 90000 00002',
   },
   {
     id: '3',
@@ -67,8 +70,9 @@ export const companies: Company[] = [
     address: '789, Commercial Complex, Ring Road',
     state: 'Delhi',
     stateCode: '07',
-    pendingAmount: 45000,
+    pendingAmount: 2000,
     lastTransaction: '2025-02-01',
+    phone: '+91 90000 00003',
   },
   {
     id: '4',
@@ -77,7 +81,8 @@ export const companies: Company[] = [
     address: '321, Tech Park, OMR Road',
     state: 'Tamil Nadu',
     stateCode: '33',
-    pendingAmount: 0,
+    pendingAmount: 2000,
+    phone: '+91 90000 00004',
   },
 ];
 

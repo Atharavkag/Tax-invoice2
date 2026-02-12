@@ -50,10 +50,10 @@ const AddCompanyDialog = ({ onAddCompany }: AddCompanyDialogProps) => {
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
+    phone: '',
     gstNo: '',
     address: '',
     stateCode: '',
-    openingBalance: '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -67,12 +67,12 @@ const AddCompanyDialog = ({ onAddCompany }: AddCompanyDialogProps) => {
     const newErrors: Record<string, string> = {};
 
     if (!formData.name.trim()) newErrors.name = 'Company name is required';
+    if (!formData.phone.trim()) newErrors.phone = 'Contact number is required';
     if (!formData.gstNo.trim()) {
       newErrors.gstNo = 'GST number is required';
     } else if (!validateGstFormat(formData.gstNo)) {
       newErrors.gstNo = 'Invalid GST format';
     }
-    if (!formData.address.trim()) newErrors.address = 'Address is required';
     if (!formData.stateCode) newErrors.stateCode = 'State is required';
 
     if (Object.keys(newErrors).length > 0) {
@@ -81,20 +81,20 @@ const AddCompanyDialog = ({ onAddCompany }: AddCompanyDialogProps) => {
     }
 
     const selectedState = indianStates.find(s => s.code === formData.stateCode);
-    const openingBalance = Number(formData.openingBalance || 0);
     
     const newCompany: Company = {
       id: `new-${Date.now()}`,
       name: formData.name.trim(),
+      phone: formData.phone.trim(),
       gstNo: formData.gstNo.toUpperCase().trim(),
       address: formData.address.trim(),
       state: selectedState?.name || '',
       stateCode: formData.stateCode,
-      pendingAmount: Number.isNaN(openingBalance) ? 0 : openingBalance,
+      pendingAmount: 2000,
     };
 
     onAddCompany(newCompany);
-    setFormData({ name: '', gstNo: '', address: '', stateCode: '', openingBalance: '' });
+    setFormData({ name: '', phone: '', gstNo: '', address: '', stateCode: '' });
     setErrors({});
     setOpen(false);
     
@@ -132,6 +132,20 @@ const AddCompanyDialog = ({ onAddCompany }: AddCompanyDialogProps) => {
               }}
             />
             {errors.name && <p className="text-xs text-destructive">{errors.name}</p>}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="phone">Contact Number *</Label>
+            <Input
+              id="phone"
+              placeholder="e.g., +91 98765 43210"
+              value={formData.phone}
+              onChange={(e) => {
+                setFormData(prev => ({ ...prev, phone: e.target.value }));
+                setErrors(prev => ({ ...prev, phone: '' }));
+              }}
+            />
+            {errors.phone && <p className="text-xs text-destructive">{errors.phone}</p>}
           </div>
 
           <div className="space-y-2">
@@ -174,7 +188,7 @@ const AddCompanyDialog = ({ onAddCompany }: AddCompanyDialogProps) => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="address">Address *</Label>
+            <Label htmlFor="address">Address (optional)</Label>
             <Input
               id="address"
               placeholder="Enter full address"
@@ -185,23 +199,6 @@ const AddCompanyDialog = ({ onAddCompany }: AddCompanyDialogProps) => {
               }}
             />
             {errors.address && <p className="text-xs text-destructive">{errors.address}</p>}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="openingBalance">Opening Balance (optional)</Label>
-            <Input
-              id="openingBalance"
-              type="number"
-              min={0}
-              placeholder="Enter old balance, e.g. 5000"
-              value={formData.openingBalance}
-              onChange={(e) => {
-                setFormData(prev => ({ ...prev, openingBalance: e.target.value }));
-              }}
-            />
-            <p className="text-[11px] text-muted-foreground">
-              If customer already has outstanding balance, enter it here.
-            </p>
           </div>
 
           <div className="flex justify-end gap-2 pt-2">
