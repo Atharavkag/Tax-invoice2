@@ -264,6 +264,8 @@ const InvoicePdf = ({ invoiceNumber, invoiceDate, items, company, options }: Inv
   const subtotal = calculateSubtotal();
   const totalGst = calculateTotalGst();
   const grandTotal = subtotal + totalGst;
+  const previousBalance = company.pendingAmount ?? 0;
+  const totalPayable = previousBalance + grandTotal;
 
   const formatDueDate = (dateStr: string) => {
     if (!dateStr) return '';
@@ -393,9 +395,17 @@ const InvoicePdf = ({ invoiceNumber, invoiceDate, items, company, options }: Inv
                 <Text style={styles.summaryValue}>₹{totalGst.toLocaleString()}</Text>
               </View>
             )}
+            <View style={styles.summaryRow}>
+              <Text style={styles.summaryLabel}>Invoice Total</Text>
+              <Text style={styles.summaryValue}>₹{grandTotal.toLocaleString()}</Text>
+            </View>
+            <View style={styles.summaryRow}>
+              <Text style={styles.summaryLabel}>Previous Balance</Text>
+              <Text style={styles.summaryValue}>₹{previousBalance.toLocaleString()}</Text>
+            </View>
             <View style={styles.totalRow}>
-              <Text style={styles.totalLabel}>Grand Total</Text>
-              <Text style={styles.totalValue}>₹{grandTotal.toLocaleString()}</Text>
+              <Text style={styles.totalLabel}>Total Payable</Text>
+              <Text style={styles.totalValue}>₹{totalPayable.toLocaleString()}</Text>
             </View>
           </View>
         </View>
