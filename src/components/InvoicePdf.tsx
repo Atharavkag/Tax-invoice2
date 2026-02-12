@@ -20,6 +20,7 @@ interface InvoicePdfProps {
   previousBalance?: number;
   bankDetails: any;
   qrCode?: string;
+  logo?: string;
 }
 
 // Enhanced Number to Words Function
@@ -70,38 +71,56 @@ const styles = StyleSheet.create({
   page: { 
     fontFamily: 'Helvetica', 
     fontSize: 8, 
-    padding: 20 
-  },
-  container: { 
-    border: '2px solid black' 
+    padding: 15
   },
   
-  // Header styles
-  header: { 
-    padding: 6, 
-    borderBottom: '2px solid black', 
-    textAlign: 'center',
-    backgroundColor: '#ffffff'
+  // Header outside the box
+  pageHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+    paddingHorizontal: 5
   },
-  headerText: { 
-    fontSize: 14, 
+  headerTitle: {
+    fontSize: 16,
     fontFamily: 'Helvetica-Bold',
-    marginBottom: 2
+    textAlign: 'center',
+    flex: 1
   },
   headerSubtext: {
     fontSize: 8,
-    fontFamily: 'Helvetica'
+    fontFamily: 'Helvetica',
+    position: 'absolute',
+    right: 0
+  },
+  
+  // Main container with border
+  container: { 
+    border: '2px solid black'
   },
   
   // Top section - Company and Invoice Details
   topSection: { 
     flexDirection: 'row', 
-    borderBottom: '2px solid black' 
+    borderBottom: '1px solid black' 
   },
   companySection: { 
     width: '50%', 
     padding: 8, 
-    borderRight: '2px solid black' 
+    borderRight: '1px solid black',
+    flexDirection: 'row'
+  },
+  logoContainer: {
+    width: 60,
+    marginRight: 8
+  },
+  logo: {
+    width: 55,
+    height: 55
+  },
+  companyDetails: {
+    flex: 1
   },
   invoiceDetailsSection: { 
     width: '50%'
@@ -119,7 +138,8 @@ const styles = StyleSheet.create({
   },
   companyInfo: { 
     fontSize: 7, 
-    marginBottom: 1 
+    marginBottom: 1,
+    lineHeight: 1.3
   },
   bold: { 
     fontFamily: 'Helvetica-Bold' 
@@ -128,30 +148,37 @@ const styles = StyleSheet.create({
   // Invoice details grid
   detailRow: { 
     flexDirection: 'row', 
-    borderBottom: '1px solid black' 
+    borderBottom: '1px solid black',
+    minHeight: 14
+  },
+  detailRowLast: {
+    flexDirection: 'row',
+    minHeight: 14
   },
   detailLabel: { 
-    width: '40%', 
-    padding: 4, 
+    width: '45%', 
+    padding: 3, 
     fontFamily: 'Helvetica-Bold', 
     fontSize: 7,
-    borderRight: '1px solid black'
+    borderRight: '1px solid black',
+    justifyContent: 'center'
   },
   detailValue: { 
-    width: '60%', 
-    padding: 4, 
-    fontSize: 7 
+    width: '55%', 
+    padding: 3, 
+    fontSize: 7,
+    justifyContent: 'center'
   },
   
   // Buyer/Consignee section
   buyerConsigneeSection: { 
     flexDirection: 'row', 
-    borderBottom: '2px solid black' 
+    borderBottom: '1px solid black' 
   },
   buyerSection: { 
     width: '50%', 
     padding: 8, 
-    borderRight: '2px solid black' 
+    borderRight: '1px solid black' 
   },
   consigneeSection: { 
     width: '50%', 
@@ -169,11 +196,13 @@ const styles = StyleSheet.create({
   },
   buyerAddress: { 
     fontSize: 7, 
-    marginBottom: 1 
+    marginBottom: 1,
+    lineHeight: 1.3
   },
   buyerInfo: { 
     fontSize: 7, 
-    marginBottom: 1 
+    marginBottom: 1,
+    lineHeight: 1.3
   },
   
   // Table styles
@@ -181,81 +210,104 @@ const styles = StyleSheet.create({
     flexDirection: 'row', 
     backgroundColor: '#f5f5f5', 
     borderBottom: '1px solid black',
-    fontFamily: 'Helvetica-Bold'
+    fontFamily: 'Helvetica-Bold',
+    minHeight: 20
   },
   tableRow: { 
     flexDirection: 'row', 
     borderBottom: '1px solid black',
-    minHeight: 20
+    minHeight: 18
   },
   th: { 
-    padding: 4, 
+    padding: 3, 
     fontSize: 7, 
     textAlign: 'center', 
     borderRight: '1px solid black',
-    fontFamily: 'Helvetica-Bold'
+    fontFamily: 'Helvetica-Bold',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   td: { 
-    padding: 4, 
+    padding: 3, 
     fontSize: 7, 
-    borderRight: '1px solid black' 
+    borderRight: '1px solid black',
+    justifyContent: 'center'
   },
   tdCenter: {
-    textAlign: 'center'
+    textAlign: 'center',
+    alignItems: 'center'
   },
   tdRight: {
     textAlign: 'right',
-    paddingRight: 6
+    paddingRight: 5
+  },
+  tdLeft: {
+    textAlign: 'left',
+    paddingLeft: 5
   },
   
   // Tax and total rows
   taxRow: {
     flexDirection: 'row',
     borderBottom: '1px solid black',
-    minHeight: 15
+    minHeight: 30
   },
   totalRow: {
     flexDirection: 'row',
     backgroundColor: '#f5f5f5',
-    borderBottom: '2px solid black',
-    fontFamily: 'Helvetica-Bold'
+    borderBottom: '1px solid black',
+    fontFamily: 'Helvetica-Bold',
+    minHeight: 16
   },
   
   // Amount in words
   amountInWords: { 
     padding: 6, 
-    borderBottom: '2px solid black',
-    fontSize: 7
+    borderBottom: '1px solid black',
+    fontSize: 7,
+    lineHeight: 1.4
   },
   amountInWordsLabel: {
     fontFamily: 'Helvetica-Bold',
     marginBottom: 2
   },
   
-  // Balance section
-  balanceSection: {
+  // HSN/Balance section
+  hsnBalanceSection: {
     flexDirection: 'row',
-    borderBottom: '2px solid black',
+    borderBottom: '1px solid black',
     fontSize: 7
   },
-  balanceLeft: {
-    width: '15%',
+  hsnLabel: {
+    width: '10%',
+    borderRight: '1px solid black',
     padding: 6,
-    borderRight: '1px solid black'
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   balanceTable: {
-    width: '85%',
+    width: '90%',
     flexDirection: 'column'
   },
-  balanceRow: {
+  balanceHeaderRow: {
+    flexDirection: 'row',
+    borderBottom: '1px solid black',
+    backgroundColor: '#f5f5f5'
+  },
+  balanceDataRow: {
     flexDirection: 'row',
     borderBottom: '1px solid black'
   },
+  balanceTotalRow: {
+    flexDirection: 'row'
+  },
   balanceCell: {
-    padding: 4,
+    padding: 3,
     borderRight: '1px solid black',
     fontSize: 7,
-    textAlign: 'center'
+    textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   balanceCellLabel: {
     fontFamily: 'Helvetica-Bold'
@@ -264,30 +316,33 @@ const styles = StyleSheet.create({
   // Tax amount in words
   taxAmountWords: {
     padding: 6,
-    borderBottom: '2px solid black',
-    fontSize: 7
+    borderBottom: '1px solid black',
+    fontSize: 7,
+    lineHeight: 1.4
   },
   
   // Bank and QR section
   bankQrSection: { 
     flexDirection: 'row', 
-    borderBottom: '2px solid black' 
+    borderBottom: '1px solid black',
+    minHeight: 90
   },
   qrSection: { 
-    width: '20%', 
+    width: '15%', 
     padding: 8, 
-    borderRight: '2px solid black', 
+    borderRight: '1px solid black', 
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'flex-start'
   },
   bankSection: { 
-    width: '80%', 
-    padding: 8 
+    width: '85%', 
+    padding: 8,
+    flexDirection: 'column'
   },
   qrImage: { 
-    width: 60, 
-    height: 60,
-    marginBottom: 4
+    width: 55, 
+    height: 55,
+    marginBottom: 3
   },
   qrText: { 
     fontSize: 6, 
@@ -300,24 +355,25 @@ const styles = StyleSheet.create({
   },
   bankDetail: { 
     fontSize: 7, 
-    marginBottom: 2 
+    marginBottom: 2,
+    lineHeight: 1.3
   },
   
   // Declaration and signature
   declarationSection: { 
-    flexDirection: 'row', 
-    minHeight: 80,
-    borderBottom: '2px solid black'
+    flexDirection: 'row',
+    minHeight: 70
   },
   declarationLeft: { 
     width: '60%', 
     padding: 8,
-    borderRight: '2px solid black'
+    borderRight: '1px solid black'
   },
   signatureRight: { 
     width: '40%', 
     padding: 8,
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'space-between'
   },
   declarationTitle: { 
     fontSize: 8, 
@@ -331,19 +387,19 @@ const styles = StyleSheet.create({
   signatureCompany: {
     fontSize: 8,
     fontFamily: 'Helvetica-Bold',
-    marginBottom: 30
+    marginBottom: 35
   },
   signatureLine: {
-    fontSize: 7,
-    marginTop: 10
+    fontSize: 7
   },
   
-  // Footer
+  // Footer - OUTSIDE the box
   footer: { 
     padding: 6, 
     textAlign: 'center', 
-    fontSize: 7,
-    fontFamily: 'Helvetica-Bold'
+    fontSize: 8,
+    fontFamily: 'Helvetica-Bold',
+    marginTop: 5
   }
 });
 
@@ -355,7 +411,8 @@ const InvoicePdf: React.FC<InvoicePdfProps> = ({
   igstRate, 
   previousBalance = 0, 
   bankDetails, 
-  qrCode 
+  qrCode,
+  logo
 }) => {
   // Calculate totals
   const subtotal = items.reduce((sum, item) => sum + (item.amount || 0), 0);
@@ -364,38 +421,51 @@ const InvoicePdf: React.FC<InvoicePdfProps> = ({
   const totalTax = igst;
   const grandTotal = Math.round(subtotal + igst);
   const currentBalance = previousBalance + grandTotal;
+  const totalQuantity = items.reduce((sum, item) => sum + parseFloat(item.quantity || '0'), 0);
 
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        <View style={styles.container}>
+        
+        {/* Header OUTSIDE the bordered box */}
+        <View style={styles.pageHeader}>
+          <View style={{ width: '25%' }}></View>
+          <Text style={styles.headerTitle}>Tax Invoice</Text>
+          <Text style={styles.headerSubtext}>(ORIGINAL FOR RECIPIENT)</Text>
+        </View>
 
-          {/* Header */}
-          <View style={styles.header}>
-            <Text style={styles.headerText}>Tax Invoice</Text>
-            <Text style={styles.headerSubtext}>(ORIGINAL FOR RECIPIENT)</Text>
-          </View>
+        {/* Main bordered container */}
+        <View style={styles.container}>
 
           {/* Seller Details + Invoice Details */}
           <View style={styles.topSection}>
-            {/* Left - Company Details */}
+            {/* Left - Company Details with Logo */}
             <View style={styles.companySection}>
-              <Text style={styles.companyName}>{company?.name || "Company Name"}</Text>
-              {company?.address?.map((line: string, i: number) => (
-                <Text key={i} style={styles.companyAddress}>{line}</Text>
-              ))}
-              <Text style={styles.companyInfo}>
-                <Text style={styles.bold}>GSTIN/UIN: </Text>{company?.gstin || ""}
-              </Text>
-              <Text style={styles.companyInfo}>
-                <Text style={styles.bold}>State Name: </Text>{company?.state || ""}, Code: {company?.stateCode || ""}
-              </Text>
-              <Text style={styles.companyInfo}>
-                <Text style={styles.bold}>Contact: </Text>{company?.contact?.join(", ") || ""}
-              </Text>
-              <Text style={styles.companyInfo}>
-                <Text style={styles.bold}>E-Mail: </Text>{company?.email || ""}
-              </Text>
+              <View style={styles.logoContainer}>
+                {logo ? (
+                  <Image src={logo} style={styles.logo} />
+                ) : (
+                  <View style={styles.logo}></View>
+                )}
+              </View>
+              <View style={styles.companyDetails}>
+                <Text style={styles.companyName}>{company?.name || "Company Name"}</Text>
+                {company?.address?.map((line: string, i: number) => (
+                  <Text key={i} style={styles.companyAddress}>{line}</Text>
+                ))}
+                <Text style={styles.companyInfo}>
+                  <Text style={styles.bold}>GSTIN/UIN: </Text>{company?.gstin || ""}
+                </Text>
+                <Text style={styles.companyInfo}>
+                  <Text style={styles.bold}>State Name: </Text>{company?.state || ""}, Code: {company?.stateCode || ""}
+                </Text>
+                <Text style={styles.companyInfo}>
+                  <Text style={styles.bold}>Contact: </Text>{company?.contact?.join(", ") || ""}
+                </Text>
+                <Text style={styles.companyInfo}>
+                  <Text style={styles.bold}>E-Mail: </Text>{company?.email || ""}
+                </Text>
+              </View>
             </View>
 
             {/* Right - Invoice Details */}
@@ -436,15 +506,15 @@ const InvoicePdf: React.FC<InvoicePdfProps> = ({
                 <Text style={styles.detailLabel}>Dispatched through</Text>
                 <Text style={styles.detailValue}>Destination</Text>
               </View>
-              <View style={[styles.detailRow, { borderBottom: 'none' }]}>
+              <View style={styles.detailRow}>
                 <Text style={styles.detailLabel}>Bill of Lading/LR-RR No.</Text>
                 <Text style={styles.detailValue}>Motor Vehicle No.</Text>
               </View>
-              <View style={[styles.detailRow, { borderBottom: 'none' }]}>
-                <Text style={styles.detailLabel}>Dated</Text>
-                <Text style={styles.detailValue}>{invoiceDetails?.lrDate || ""}</Text>
+              <View style={styles.detailRow}>
+                <Text style={styles.detailLabel}>dt. 2-Feb-26</Text>
+                <Text style={styles.detailValue}>{invoiceDetails?.vehicleNo || "DD01AC9646"}</Text>
               </View>
-              <View style={[styles.detailRow, { borderBottom: 'none' }]}>
+              <View style={styles.detailRowLast}>
                 <Text style={styles.detailLabel}>Terms of Delivery</Text>
                 <Text style={styles.detailValue}></Text>
               </View>
@@ -491,9 +561,9 @@ const InvoicePdf: React.FC<InvoicePdfProps> = ({
               <Text style={[styles.th, { width: '5%' }]}>SI{'\n'}No.</Text>
               <Text style={[styles.th, { width: '33%' }]}>Description of Goods</Text>
               <Text style={[styles.th, { width: '10%' }]}>HSN/SAC</Text>
-              <Text style={[styles.th, { width: '10%' }]}>Quantity</Text>
+              <Text style={[styles.th, { width: '12%' }]}>Quantity</Text>
               <Text style={[styles.th, { width: '10%' }]}>Rate</Text>
-              <Text style={[styles.th, { width: '8%' }]}>per</Text>
+              <Text style={[styles.th, { width: '6%' }]}>per</Text>
               <Text style={[styles.th, { width: '12%', borderRight: 'none' }]}>Amount</Text>
             </View>
 
@@ -501,37 +571,40 @@ const InvoicePdf: React.FC<InvoicePdfProps> = ({
             {items.map((item, i) => (
               <View style={styles.tableRow} key={i}>
                 <Text style={[styles.td, styles.tdCenter, { width: '5%' }]}>{i + 1}</Text>
-                <Text style={[styles.td, { width: '33%' }]}>{item.description}</Text>
+                <Text style={[styles.td, styles.tdLeft, { width: '33%' }]}>
+                  <Text style={styles.bold}>{item.description.split('\n')[0]}</Text>
+                  {item.description.includes('\n') && '\n' + item.description.split('\n').slice(1).join('\n')}
+                </Text>
                 <Text style={[styles.td, styles.tdCenter, { width: '10%' }]}>{item.hsnSac}</Text>
-                <Text style={[styles.td, styles.tdRight, { width: '10%' }]}>{item.quantity}</Text>
+                <Text style={[styles.td, styles.tdRight, { width: '12%' }]}>{item.quantity}</Text>
                 <Text style={[styles.td, styles.tdRight, { width: '10%' }]}>{item.rate.toFixed(2)}</Text>
-                <Text style={[styles.td, styles.tdCenter, { width: '8%' }]}>{item.unit}</Text>
+                <Text style={[styles.td, styles.tdCenter, { width: '6%' }]}>{item.unit}</Text>
                 <Text style={[styles.td, styles.tdRight, { width: '12%', borderRight: 'none' }]}>
                   {item.amount.toFixed(2)}
                 </Text>
               </View>
             ))}
 
-            {/* Blank rows for spacing (if needed) */}
+            {/* Blank rows for spacing */}
             {items.length < 3 && Array.from({ length: 3 - items.length }).map((_, i) => (
               <View style={styles.tableRow} key={`blank-${i}`}>
-                <Text style={[styles.td, { width: '5%' }]}></Text>
-                <Text style={[styles.td, { width: '33%' }]}></Text>
-                <Text style={[styles.td, { width: '10%' }]}></Text>
-                <Text style={[styles.td, { width: '10%' }]}></Text>
-                <Text style={[styles.td, { width: '10%' }]}></Text>
-                <Text style={[styles.td, { width: '8%' }]}></Text>
-                <Text style={[styles.td, { width: '12%', borderRight: 'none' }]}></Text>
+                <Text style={[styles.td, { width: '5%' }]}> </Text>
+                <Text style={[styles.td, { width: '33%' }]}> </Text>
+                <Text style={[styles.td, { width: '10%' }]}> </Text>
+                <Text style={[styles.td, { width: '12%' }]}> </Text>
+                <Text style={[styles.td, { width: '10%' }]}> </Text>
+                <Text style={[styles.td, { width: '6%' }]}> </Text>
+                <Text style={[styles.td, { width: '12%', borderRight: 'none' }]}> </Text>
               </View>
             ))}
 
             {/* Tax Row */}
             <View style={styles.taxRow}>
-              <Text style={[styles.td, { width: '66%' }]}>
+              <Text style={[styles.td, { width: '60%', paddingLeft: 20 }]}>
                 <Text style={styles.bold}>IGST @{igstRate}%</Text>{'\n'}
                 <Text style={styles.bold}>ROUND OFF</Text>
               </Text>
-              <Text style={[styles.td, { width: '22%' }]}>{igstRate}%</Text>
+              <Text style={[styles.td, styles.tdCenter, { width: '28%' }]}>{igstRate}%</Text>
               <Text style={[styles.td, styles.tdRight, { width: '12%', borderRight: 'none' }]}>
                 {igst.toFixed(2)}{'\n'}
                 {roundOff.toFixed(2)}
@@ -540,9 +613,11 @@ const InvoicePdf: React.FC<InvoicePdfProps> = ({
 
             {/* Total Row */}
             <View style={styles.totalRow}>
-              <Text style={[styles.td, { width: '66%', fontFamily: 'Helvetica-Bold', fontSize: 8 }]}>Total</Text>
-              <Text style={[styles.td, { width: '22%', fontFamily: 'Helvetica-Bold' }]}>
-                {subtotal.toFixed(2)} kg
+              <Text style={[styles.td, { width: '60%', fontFamily: 'Helvetica-Bold', fontSize: 8, paddingLeft: 20 }]}>
+                Total
+              </Text>
+              <Text style={[styles.td, styles.tdRight, { width: '28%', fontFamily: 'Helvetica-Bold' }]}>
+                {totalQuantity.toFixed(2)} kg
               </Text>
               <Text style={[styles.td, styles.tdRight, { width: '12%', borderRight: 'none', fontFamily: 'Helvetica-Bold', fontSize: 8 }]}>
                 ₹ {grandTotal.toFixed(2)}
@@ -553,52 +628,83 @@ const InvoicePdf: React.FC<InvoicePdfProps> = ({
           {/* Amount Chargeable in Words */}
           <View style={styles.amountInWords}>
             <Text style={styles.amountInWordsLabel}>Amount Chargeable (in words)</Text>
-            <Text>{numberToWords(grandTotal)}</Text>
+            <Text style={styles.bold}>{numberToWords(grandTotal)}</Text>
           </View>
 
-          {/* Balance Section */}
-          <View style={styles.balanceSection}>
-            <View style={styles.balanceLeft}>
-              <Text style={{ fontSize: 7, writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>
+          {/* HSN/SAC and Balance Section */}
+          <View style={styles.hsnBalanceSection}>
+            <View style={styles.hsnLabel}>
+              <Text style={{ fontSize: 7, transform: 'rotate(-90deg)', width: 60 }}>
                 HSN/SAC
               </Text>
             </View>
             <View style={styles.balanceTable}>
-              <View style={styles.balanceRow}>
-                <Text style={[styles.balanceCell, styles.balanceCellLabel, { width: '20%' }]}>Taxable{'\n'}Value</Text>
-                <Text style={[styles.balanceCell, styles.balanceCellLabel, { width: '10%' }]}>Rate</Text>
-                <Text style={[styles.balanceCell, styles.balanceCellLabel, { width: '15%' }]}>Amount</Text>
-                <Text style={[styles.balanceCell, styles.balanceCellLabel, { width: '15%' }]}>Tax Amount</Text>
-                <Text style={[styles.balanceCell, styles.balanceCellLabel, { width: '20%' }]}>Previous Balance:</Text>
-                <Text style={[styles.balanceCell, { width: '20%', borderRight: 'none' }]}>
+              {/* Header Row */}
+              <View style={styles.balanceHeaderRow}>
+                <Text style={[styles.balanceCell, styles.balanceCellLabel, { width: '18%' }]}>
+                  Taxable{'\n'}Value
+                </Text>
+                <Text style={[styles.balanceCell, styles.balanceCellLabel, { width: '8%' }]}>
+                  Rate
+                </Text>
+                <Text style={[styles.balanceCell, styles.balanceCellLabel, { width: '12%' }]}>
+                  Amount
+                </Text>
+                <Text style={[styles.balanceCell, styles.balanceCellLabel, { width: '12%' }]}>
+                  Tax Amount
+                </Text>
+                <Text style={[styles.balanceCell, styles.balanceCellLabel, { width: '22%' }]}>
+                  Previous Balance:
+                </Text>
+                <Text style={[styles.balanceCell, { width: '28%', borderRight: 'none', textAlign: 'left', paddingLeft: 5 }]}>
                   ₹ {previousBalance.toFixed(2)} Dr
                 </Text>
               </View>
-              <View style={styles.balanceRow}>
-                <Text style={[styles.balanceCell, { width: '20%' }]}>{subtotal.toFixed(2)}</Text>
-                <Text style={[styles.balanceCell, { width: '10%' }]}>{igstRate}%</Text>
-                <Text style={[styles.balanceCell, { width: '15%' }]}>{igst.toFixed(2)}</Text>
-                <Text style={[styles.balanceCell, { width: '15%' }]}>{totalTax.toFixed(2)}</Text>
-                <Text style={[styles.balanceCell, styles.balanceCellLabel, { width: '20%' }]}>Current Balance:</Text>
-                <Text style={[styles.balanceCell, { width: '20%', borderRight: 'none' }]}>
+              
+              {/* Data Row */}
+              <View style={styles.balanceDataRow}>
+                <Text style={[styles.balanceCell, { width: '18%' }]}>
+                  {subtotal.toFixed(2)}
+                </Text>
+                <Text style={[styles.balanceCell, { width: '8%' }]}>
+                  {igstRate}%
+                </Text>
+                <Text style={[styles.balanceCell, { width: '12%' }]}>
+                  {igst.toFixed(2)}
+                </Text>
+                <Text style={[styles.balanceCell, { width: '12%' }]}>
+                  {totalTax.toFixed(2)}
+                </Text>
+                <Text style={[styles.balanceCell, styles.balanceCellLabel, { width: '22%' }]}>
+                  Current Balance:
+                </Text>
+                <Text style={[styles.balanceCell, { width: '28%', borderRight: 'none', textAlign: 'left', paddingLeft: 5 }]}>
                   ₹ {currentBalance.toFixed(2)} Dr
                 </Text>
               </View>
-              <View style={[styles.balanceRow, { borderBottom: 'none' }]}>
-                <Text style={[styles.balanceCell, styles.balanceCellLabel, { width: '20%' }]}>Total</Text>
-                <Text style={[styles.balanceCell, { width: '10%' }]}></Text>
-                <Text style={[styles.balanceCell, { width: '15%' }]}>{subtotal.toFixed(2)}</Text>
-                <Text style={[styles.balanceCell, { width: '15%' }]}>{totalTax.toFixed(2)}</Text>
-                <Text style={[styles.balanceCell, { width: '20%' }]}></Text>
-                <Text style={[styles.balanceCell, { width: '20%', borderRight: 'none' }]}></Text>
+              
+              {/* Total Row */}
+              <View style={styles.balanceTotalRow}>
+                <Text style={[styles.balanceCell, styles.balanceCellLabel, { width: '18%' }]}>
+                  Total
+                </Text>
+                <Text style={[styles.balanceCell, { width: '8%' }]}></Text>
+                <Text style={[styles.balanceCell, { width: '12%' }]}>
+                  {subtotal.toFixed(2)}
+                </Text>
+                <Text style={[styles.balanceCell, { width: '12%' }]}>
+                  {totalTax.toFixed(2)}
+                </Text>
+                <Text style={[styles.balanceCell, { width: '22%' }]}></Text>
+                <Text style={[styles.balanceCell, { width: '28%', borderRight: 'none' }]}></Text>
               </View>
             </View>
           </View>
 
           {/* Tax Amount in Words */}
           <View style={styles.taxAmountWords}>
-            <Text style={[styles.bold, { marginBottom: 2 }]}>Tax Amount (in words):</Text>
-            <Text>{numberToWords(totalTax)}</Text>
+            <Text style={[styles.bold, { marginBottom: 2 }]}>Tax Amount (in words)  :  </Text>
+            <Text style={styles.bold}>{numberToWords(totalTax)}</Text>
           </View>
 
           {/* Bank Details and QR Code */}
@@ -608,8 +714,8 @@ const InvoicePdf: React.FC<InvoicePdfProps> = ({
               {qrCode ? (
                 <Image src={qrCode} style={styles.qrImage} />
               ) : (
-                <View style={{ width: 60, height: 60, border: '1px solid black', alignItems: 'center', justifyContent: 'center' }}>
-                  <Text style={{ fontSize: 6 }}>QR Code</Text>
+                <View style={{ width: 55, height: 55, border: '1px solid black', alignItems: 'center', justifyContent: 'center' }}>
+                  <Text style={{ fontSize: 6 }}>QR</Text>
                 </View>
               )}
               <Text style={styles.qrText}>Scan to pay</Text>
@@ -618,27 +724,33 @@ const InvoicePdf: React.FC<InvoicePdfProps> = ({
             {/* Bank Details */}
             <View style={styles.bankSection}>
               <Text style={styles.bankTitle}>Company's Bank Details</Text>
-              <Text style={styles.bankDetail}>
-                <Text style={styles.bold}>A/c Holder's Name: </Text>
-                {bankDetails?.accountHolderName || ""}
-              </Text>
-              <Text style={styles.bankDetail}>
-                <Text style={styles.bold}>Bank Name: </Text>
-                {bankDetails?.bankName || ""}
-              </Text>
-              <Text style={styles.bankDetail}>
-                <Text style={styles.bold}>A/c No.: </Text>
-                {bankDetails?.accountNo || ""}
-              </Text>
-              <Text style={styles.bankDetail}>
-                <Text style={styles.bold}>Branch & IFSC Code: </Text>
-                {bankDetails?.branchAndIFSC || ""}
-              </Text>
-              <Text style={styles.bankDetail}>
-                <Text style={styles.bold}>SWIFT Code: </Text>
-                {bankDetails?.swiftCode || ""}
-              </Text>
-              <Text style={{ textAlign: 'right', marginTop: 8, fontSize: 8 }}>E. & O.E</Text>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <View style={{ width: '70%' }}>
+                  <Text style={styles.bankDetail}>
+                    <Text style={styles.bold}>A/c Holder's Name  :  </Text>
+                    {bankDetails?.accountHolderName || ""}
+                  </Text>
+                  <Text style={styles.bankDetail}>
+                    <Text style={styles.bold}>Bank Name              :  </Text>
+                    {bankDetails?.bankName || ""}
+                  </Text>
+                  <Text style={styles.bankDetail}>
+                    <Text style={styles.bold}>A/c No.                :  </Text>
+                    {bankDetails?.accountNo || ""}
+                  </Text>
+                  <Text style={styles.bankDetail}>
+                    <Text style={styles.bold}>Branch & IFSC Code     :  </Text>
+                    {bankDetails?.branchAndIFSC || ""}
+                  </Text>
+                  <Text style={styles.bankDetail}>
+                    <Text style={styles.bold}>SWIFT Code             :  </Text>
+                    {bankDetails?.swiftCode || ""}
+                  </Text>
+                </View>
+                <View style={{ width: '30%', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
+                  <Text style={{ fontSize: 9, fontFamily: 'Helvetica-Bold' }}>E. & O.E</Text>
+                </View>
+              </View>
             </View>
           </View>
 
@@ -648,7 +760,8 @@ const InvoicePdf: React.FC<InvoicePdfProps> = ({
             <View style={styles.declarationLeft}>
               <Text style={styles.declarationTitle}>Declaration</Text>
               <Text style={styles.declarationText}>
-                We declare that this invoice shows the actual price of the goods described and that all particulars are true and correct.
+                We declare that this invoice shows the actual price of the goods{'\n'}
+                described and that all particulars are true and correct.
               </Text>
             </View>
 
@@ -659,12 +772,13 @@ const InvoicePdf: React.FC<InvoicePdfProps> = ({
             </View>
           </View>
 
-          {/* Footer */}
-          <View style={styles.footer}>
-            <Text>This is a Computer Generated Invoice</Text>
-          </View>
-
         </View>
+
+        {/* Footer OUTSIDE the bordered box */}
+        <View style={styles.footer}>
+          <Text>This is a Computer Generated Invoice</Text>
+        </View>
+
       </Page>
     </Document>
   );
