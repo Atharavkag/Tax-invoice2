@@ -1,28 +1,20 @@
-import styled from 'styled-components';
+// Assuming you're using styled-components or a similar library for your styles.
 
-const PageHeader = styled.h1`
-  position: absolute;
-  top: 0;
-  left: 0;
-`;
-
-const HeaderSubtext = styled.h2`
-  position: absolute;
-  top: 0;
-  right: 0;
-  margin-right: 20px;
-`;
-
-// Other component code...
-
-const InvoicePdf = () => {
-  return (
-    <div>
-      <PageHeader>Tax Invoice</PageHeader>
-      <HeaderSubtext>(ORIGINAL FOR RECIPIENT)</HeaderSubtext>
-      {/* Rest of the invoice PDF code */}
-    </div>
-  );
+const styles = {
+    pageHeader: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: '20px', // Example margin for spacing
+    },
+    headerSubtext: {
+        fontSize: '12px',
+        color: '#888888', // Example color for subtext
+    },
 };
 
-export default InvoicePdf;
+// Usage in your component:
+<div style={styles.pageHeader}>
+    <h1>Tax Invoice</h1>
+    <span style={styles.headerSubtext}>(ORIGINAL FOR RECIPIENT)</span>
+</div>
