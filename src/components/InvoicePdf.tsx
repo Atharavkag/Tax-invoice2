@@ -74,18 +74,17 @@ const styles = StyleSheet.create({
     padding: 15
   },
   
-  // Header outside the box
+  // Header outside the box - SINGLE LINE
   pageHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     marginBottom: 5,
     paddingHorizontal: 5
   },
   headerTitle: {
     fontSize: 16,
-    fontFamily: 'Helvetica-Bold',
-    textAlign: 'center'
+    fontFamily: 'Helvetica-Bold'
   },
   headerSubtext: {
     fontSize: 8,
@@ -264,39 +263,39 @@ const styles = StyleSheet.create({
     minHeight: 14
   },
   
-  // Amount in words
+  // Amount in words with E. & O.E on same line
   amountInWords: { 
     flexDirection: 'row',
     padding: 6, 
     borderBottom: '1px solid black',
     fontSize: 7,
-    lineHeight: 1.3,
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    alignItems: 'flex-start'
   },
   amountInWordsLeft: {
-    flex: 1
+    flex: 1,
+    paddingRight: 10
   },
   amountInWordsLabel: {
     fontFamily: 'Helvetica-Bold',
     marginBottom: 1
   },
   
-  // QR and HSN Section combined
-  qrHsnSection: {
+  // QR and HSN combined section
+  qrHsnCombinedSection: {
     flexDirection: 'row',
-    borderBottom: '1px solid black',
-    minHeight: 85
+    borderBottom: '1px solid black'
   },
-  qrContainer: {
-    width: '20%',
+  qrArea: {
+    width: '17%',
     borderRight: '1px solid black',
     padding: 6,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-start'
   },
-  hsnTable: {
-    width: '80%'
+  hsnTableArea: {
+    width: '83%'
   },
   qrImage: { 
     width: 50, 
@@ -309,17 +308,14 @@ const styles = StyleSheet.create({
   },
   
   // HSN table rows
-  hsnHeaderRow: {
+  hsnRow: {
     flexDirection: 'row',
     borderBottom: '1px solid black',
-    backgroundColor: '#f5f5f5'
+    minHeight: 14
   },
-  hsnDataRow: {
+  hsnRowNoBorder: {
     flexDirection: 'row',
-    borderBottom: '1px solid black'
-  },
-  hsnTotalRow: {
-    flexDirection: 'row'
+    minHeight: 14
   },
   hsnCell: {
     padding: 3,
@@ -342,22 +338,21 @@ const styles = StyleSheet.create({
   taxAmountWords: {
     padding: 6,
     borderBottom: '1px solid black',
-    fontSize: 7,
-    lineHeight: 1.3
+    fontSize: 7
   },
   
-  // Bank section (no QR here)
-  bankOnlySection: { 
+  // Bank section with empty space on left
+  bankSection: { 
     flexDirection: 'row',
     borderBottom: '1px solid black',
-    minHeight: 70
+    minHeight: 65
   },
-  bankLeft: {
-    width: '20%',
+  bankEmptyLeft: {
+    width: '17%',
     borderRight: '1px solid black'
   },
-  bankRight: {
-    width: '80%',
+  bankDetailsRight: {
+    width: '83%',
     padding: 8
   },
   bankTitle: { 
@@ -371,10 +366,10 @@ const styles = StyleSheet.create({
     lineHeight: 1.2
   },
   
-  // Declaration and signature
+  // Declaration section
   declarationSection: { 
     flexDirection: 'row',
-    minHeight: 65
+    minHeight: 60
   },
   declarationLeft: { 
     width: '60%', 
@@ -385,9 +380,8 @@ const styles = StyleSheet.create({
     width: '40%', 
     padding: 8,
     display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'space-between'
   },
   declarationTitle: { 
     fontSize: 8, 
@@ -405,10 +399,11 @@ const styles = StyleSheet.create({
   },
   signatureLine: {
     fontSize: 7,
-    textAlign: 'center'
+    textAlign: 'center',
+    marginTop: 30
   },
   
-  // Footer - OUTSIDE the box
+  // Footer OUTSIDE box
   footer: { 
     padding: 5, 
     textAlign: 'center', 
@@ -441,7 +436,8 @@ const InvoicePdf: React.FC<InvoicePdfProps> = ({
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        {/* Header OUTSIDE the bordered box */}
+        
+        {/* Header OUTSIDE - Tax Invoice and (ORIGINAL FOR RECIPIENT) on SAME LINE */}
         <View style={styles.pageHeader}>
           <Text style={styles.headerTitle}>Tax Invoice</Text>
           <Text style={styles.headerSubtext}>(ORIGINAL FOR RECIPIENT)</Text>
@@ -449,6 +445,7 @@ const InvoicePdf: React.FC<InvoicePdfProps> = ({
 
         {/* Main bordered container */}
         <View style={styles.container}>
+
           {/* Seller Details + Invoice Details */}
           <View style={styles.topSection}>
             {/* Left - Company Details with Logo */}
@@ -570,8 +567,7 @@ const InvoicePdf: React.FC<InvoicePdfProps> = ({
           <View>
             {/* Table Header */}
             <View style={styles.tableHeader}>
-              <Text style={[styles.th, { width: '5%' }]}>SI{'
-'}No.</Text>
+              <Text style={[styles.th, { width: '5%' }]}>SI{'\n'}No.</Text>
               <Text style={[styles.th, { width: '33%' }]}>Description of Goods</Text>
               <Text style={[styles.th, { width: '10%' }]}>HSN/SAC</Text>
               <Text style={[styles.th, { width: '12%' }]}>Quantity</Text>
@@ -584,7 +580,7 @@ const InvoicePdf: React.FC<InvoicePdfProps> = ({
             {items.map((item, i) => (
               <View style={styles.tableRow} key={i}>
                 <Text style={[styles.td, styles.tdCenter, { width: '5%' }]}>{i + 1}</Text>
-                <Text style={[styles.td, styles.tdLeft, { width: '33%', fontSize: 7 }]}>  
+                <Text style={[styles.td, styles.tdLeft, { width: '33%', fontSize: 7 }]}>
                   <Text style={styles.bold}>{item.description.split('\n')[0]}</Text>
                   {item.description.includes('\n') && '\n' + item.description.split('\n').slice(1).join('\n')}
                 </Text>
@@ -592,7 +588,7 @@ const InvoicePdf: React.FC<InvoicePdfProps> = ({
                 <Text style={[styles.td, styles.tdRight, { width: '12%' }]}>{item.quantity}</Text>
                 <Text style={[styles.td, styles.tdRight, { width: '10%' }]}>{item.rate.toFixed(2)}</Text>
                 <Text style={[styles.td, styles.tdCenter, { width: '6%' }]}>{item.unit}</Text>
-                <Text style={[styles.td, styles.tdRight, { width: '12%', borderRight: 'none' }]}>  
+                <Text style={[styles.td, styles.tdRight, { width: '12%', borderRight: 'none' }]}>
                   {item.amount.toFixed(2)}
                 </Text>
               </View>
@@ -600,168 +596,174 @@ const InvoicePdf: React.FC<InvoicePdfProps> = ({
 
             {/* Blank rows for spacing if items < 3 */}
             {items.length < 3 && Array.from({ length: 3 - items.length }).map((_, i) => (
-              <View style={styles.tableRow} key={`blank-${i}`}>  
-                <Text style={[styles.td, { width: '5%' }]}></Text>  
-                <Text style={[styles.td, { width: '33%' }]}></Text>  
-                <Text style={[styles.td, { width: '10%' }]}></Text>  
-                <Text style={[styles.td, { width: '12%' }]}></Text>  
-                <Text style={[styles.td, { width: '10%' }]}></Text>  
-                <Text style={[styles.td, { width: '6%' }]}></Text>  
-                <Text style={[styles.td, { width: '12%', borderRight: 'none' }]}></Text>  
+              <View style={styles.tableRow} key={`blank-${i}`}>
+                <Text style={[styles.td, { width: '5%' }]}></Text>
+                <Text style={[styles.td, { width: '33%' }]}></Text>
+                <Text style={[styles.td, { width: '10%' }]}></Text>
+                <Text style={[styles.td, { width: '12%' }]}></Text>
+                <Text style={[styles.td, { width: '10%' }]}></Text>
+                <Text style={[styles.td, { width: '6%' }]}></Text>
+                <Text style={[styles.td, { width: '12%', borderRight: 'none' }]}></Text>
               </View>
             ))}
 
             {/* Tax Row */}
             <View style={styles.taxRow}>
-              <Text style={[styles.td, { width: '60%', paddingLeft: 8, fontSize: 8 }]}>  
-                <Text style={styles.bold}>IGST @{igstRate}%</Text>{'\n'}  
+              <Text style={[styles.td, { width: '60%', paddingLeft: 8, fontSize: 8 }]}>
+                <Text style={styles.bold}>IGST @{igstRate}%</Text>{'\n'}
                 <Text style={styles.bold}>ROUND OFF</Text>
               </Text>
               <Text style={[styles.td, styles.tdCenter, { width: '28%' }]}>{igstRate}%</Text>
-              <Text style={[styles.td, styles.tdRight, { width: '12%', borderRight: 'none' }]}>  
-                {igst.toFixed(2)}{'\n'}  
+              <Text style={[styles.td, styles.tdRight, { width: '12%', borderRight: 'none' }]}>
+                {igst.toFixed(2)}{'\n'}
                 {roundOff.toFixed(2)}
               </Text>
             </View>
 
             {/* Total Row */}
             <View style={styles.totalRow}>
-              <Text style={[styles.td, { width: '60%', fontFamily: 'Helvetica-Bold', fontSize: 8, paddingLeft: 8 }]}>Total</Text>
-              <Text style={[styles.td, styles.tdRight, { width: '28%', fontFamily: 'Helvetica-Bold' }]}>{totalQuantity.toFixed(2)} kg</Text>
-              <Text style={[styles.td, styles.tdRight, { width: '12%', borderRight: 'none', fontFamily: 'Helvetica-Bold', fontSize: 8 }]}>₹ {grandTotal.toFixed(2)}</Text>
+              <Text style={[styles.td, { width: '60%', fontFamily: 'Helvetica-Bold', fontSize: 8, paddingLeft: 8 }]}>
+                Total
+              </Text>
+              <Text style={[styles.td, styles.tdRight, { width: '28%', fontFamily: 'Helvetica-Bold' }]}>
+                {totalQuantity.toFixed(2)} kg
+              </Text>
+              <Text style={[styles.td, styles.tdRight, { width: '12%', borderRight: 'none', fontFamily: 'Helvetica-Bold', fontSize: 8 }]}>
+                ₹ {grandTotal.toFixed(2)}
+              </Text>
             </View>
           </View>
 
-          {/* Amount Chargeable in Words */}
-          <View style={styles.amountInWords}>  
-            <View style={styles.amountInWordsLeft}>  
-              <Text style={styles.amountInWordsLabel}>Amount Chargeable (in words)</Text>  
-              <Text style={styles.bold}>{numberToWords(grandTotal)}</Text>  
-            </View>  
-            <View style={{ paddingTop: 10 }}>  
-              <Text style={{ fontSize: 7 }}>E. & O.E</Text>  
-            </View>  
+          {/* Amount Chargeable in Words with E. & O.E on SAME ROW */}
+          <View style={styles.amountInWords}>
+            <View style={styles.amountInWordsLeft}>
+              <Text style={styles.amountInWordsLabel}>Amount Chargeable (in words)</Text>
+              <Text style={styles.bold}>{numberToWords(grandTotal)}</Text>
+            </View>
+            <View style={{ alignSelf: 'flex-end', paddingBottom: 5 }}>
+              <Text style={{ fontSize: 7 }}>E. & O.E</Text>
+            </View>
           </View>
 
-          {/* QR Code and HSN/SAC Table Combined */}
-          <View style={styles.qrHsnSection}>  
-            {/* QR Code on LEFT */}  
-            <View style={styles.qrContainer}>  
-              {qrCode ? (  
-                <Image src={qrCode} style={styles.qrImage} />  
-              ) : (  
-                <View style={{ width: 50, height: 50, border: '1px solid black', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>  
-                  <Text style={{ fontSize: 6 }}>QR</Text>  
-                </View>  
-              )}  
-              <Text style={styles.qrText}>Scan to pay</Text>  
-            </View>  
+          {/* QR Code (LEFT) + HSN/SAC Table (RIGHT) Combined Section */}
+          <View style={styles.qrHsnCombinedSection}>
+            {/* QR Code on LEFT - 17% width */}
+            <View style={styles.qrArea}>
+              {qrCode ? (
+                <Image src={qrCode} style={styles.qrImage} />
+              ) : (
+                <View style={{ width: 50, height: 50, border: '1px solid black', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Text style={{ fontSize: 6 }}>QR</Text>
+                </View>
+              )}
+              <Text style={styles.qrText}>Scan to pay</Text>
+            </View>
 
-            {/* HSN Table on RIGHT */}  
-            <View style={styles.hsnTable}>  
-              {/* Header Row */}  
-              <View style={styles.hsnHeaderRow}>  
-                <Text style={[styles.hsnCell, styles.hsnCellBold, { width: '12%' }]}>HSN/SAC</Text>  
-                <Text style={[styles.hsnCell, styles.hsnCellBold, { width: '15%' }]}>Taxable{'
-'}Value</Text>  
-                <Text style={[styles.hsnCell, styles.hsnCellBold, { width: '8%' }]}>Rate</Text>  
-                <Text style={[styles.hsnCell, styles.hsnCellBold, { width: '12%' }]}>Amount</Text>  
-                <Text style={[styles.hsnCell, styles.hsnCellBold, { width: '12%' }]}>Tax Amount</Text>  
-                <Text style={[styles.hsnCell, styles.hsnCellBold, { width: '20%' }]}>Previous Balance:</Text>  
-                <Text style={[styles.hsnCell, styles.hsnCellLeft, { width: '21%', borderRight: 'none' }]}>₹ {previousBalance.toFixed(2)} Dr</Text>  
-              </View>  
+            {/* HSN/SAC Table on RIGHT - 83% width */}
+            <View style={styles.hsnTableArea}>
+              {/* Header Row */}
+              <View style={styles.hsnRow}>
+                <Text style={[styles.hsnCell, styles.hsnCellBold, { width: '10%' }]}>HSN/SAC</Text>
+                <Text style={[styles.hsnCell, styles.hsnCellBold, { width: '14%' }]}>Taxable{'\n'}Value</Text>
+                <Text style={[styles.hsnCell, styles.hsnCellBold, { width: '8%' }]}>Rate</Text>
+                <Text style={[styles.hsnCell, styles.hsnCellBold, { width: '11%' }]}>Amount</Text>
+                <Text style={[styles.hsnCell, styles.hsnCellBold, { width: '11%' }]}>Tax Amount</Text>
+                <Text style={[styles.hsnCell, styles.hsnCellBold, { width: '22%' }]}>Previous Balance:</Text>
+                <Text style={[styles.hsnCell, styles.hsnCellLeft, { width: '24%', borderRight: 'none' }]}>
+                  ₹ {previousBalance.toFixed(2)} Dr
+                </Text>
+              </View>
 
-              {/* Data Row */}  
-              <View style={styles.hsnDataRow}>  
-                <Text style={[styles.hsnCell, { width: '12%' }]}>{items[0]?.hsnSac || ""}</Text>  
-                <Text style={[styles.hsnCell, { width: '15%' }]}>{subtotal.toFixed(2)}</Text>  
-                <Text style={[styles.hsnCell, { width: '8%' }]}>{igstRate}%</Text>  
-                <Text style={[styles.hsnCell, { width: '12%' }]}>{igst.toFixed(2)}</Text>  
-                <Text style={[styles.hsnCell, { width: '12%' }]}>{totalTax.toFixed(2)}</Text>  
-                <Text style={[styles.hsnCell, styles.hsnCellBold, { width: '20%' }]}>Current Balance:</Text>  
-                <Text style={[styles.hsnCell, styles.hsnCellLeft, { width: '21%', borderRight: 'none' }]}>₹ {currentBalance.toFixed(2)} Dr</Text>  
-              </View>  
+              {/* Data Row */}
+              <View style={styles.hsnRow}>
+                <Text style={[styles.hsnCell, { width: '10%' }]}>{items[0]?.hsnSac || ""}</Text>
+                <Text style={[styles.hsnCell, { width: '14%' }]}>{subtotal.toFixed(2)}</Text>
+                <Text style={[styles.hsnCell, { width: '8%' }]}>{igstRate}%</Text>
+                <Text style={[styles.hsnCell, { width: '11%' }]}>{igst.toFixed(2)}</Text>
+                <Text style={[styles.hsnCell, { width: '11%' }]}>{totalTax.toFixed(2)}</Text>
+                <Text style={[styles.hsnCell, styles.hsnCellBold, { width: '22%' }]}>Current Balance:</Text>
+                <Text style={[styles.hsnCell, styles.hsnCellLeft, { width: '24%', borderRight: 'none' }]}>
+                  ₹ {currentBalance.toFixed(2)} Dr
+                </Text>
+              </View>
 
-              {/* Total Row */}  
-              <View style={styles.hsnTotalRow}>  
-                <Text style={[styles.hsnCell, { width: '12%' }]}></Text>  
-                <Text style={[styles.hsnCell, styles.hsnCellBold, { width: '15%' }]}>Total</Text>  
-                <Text style={[styles.hsnCell, { width: '8%' }]}></Text>  
-                <Text style={[styles.hsnCell, { width: '12%' }]}>{subtotal.toFixed(2)}</Text>  
-                <Text style={[styles.hsnCell, { width: '12%' }]}>{totalTax.toFixed(2)}</Text>  
-                <Text style={[styles.hsnCell, { width: '20%' }]}></Text>  
-                <Text style={[styles.hsnCell, { width: '21%', borderRight: 'none' }]}></Text>  
-              </View>  
-            </View>  
-          </View>  
+              {/* Total Row */}
+              <View style={styles.hsnRowNoBorder}>
+                <Text style={[styles.hsnCell, { width: '10%' }]}></Text>
+                <Text style={[styles.hsnCell, styles.hsnCellBold, { width: '14%' }]}>Total</Text>
+                <Text style={[styles.hsnCell, { width: '8%' }]}></Text>
+                <Text style={[styles.hsnCell, { width: '11%' }]}>{subtotal.toFixed(2)}</Text>
+                <Text style={[styles.hsnCell, { width: '11%' }]}>{totalTax.toFixed(2)}</Text>
+                <Text style={[styles.hsnCell, { width: '22%' }]}></Text>
+                <Text style={[styles.hsnCell, { width: '24%', borderRight: 'none' }]}></Text>
+              </View>
+            </View>
+          </View>
 
-          {/* Tax Amount in Words */}  
-          <View style={styles.taxAmountWords}>  
-            <Text><Text style={styles.bold}>Tax Amount (in words)  :  </Text>{numberToWords(totalTax)}</Text>  
-          </View>  
+          {/* Tax Amount in Words */}
+          <View style={styles.taxAmountWords}>
+            <Text><Text style={styles.bold}>Tax Amount (in words)  :  </Text>{numberToWords(totalTax)}</Text>
+          </View>
 
-          {/* Bank Details Section (WITHOUT QR) */}  
-          <View style={styles.bankOnlySection}>  
-            <View style={styles.bankLeft}></View>  
-            <View style={styles.bankRight}>  
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>  
-                <View style={{ width: '75%' }}>  
-                  <Text style={styles.bankTitle}>Company's Bank Details</Text>  
-                  <Text style={styles.bankDetail}>  
-                    <Text style={styles.bold}>A/c Holder's Name  :  </Text>  
-                    {bankDetails?.accountHolderName || ""}  
-                  </Text>  
-                  <Text style={styles.bankDetail}>  
-                    <Text style={styles.bold}>Bank Name          :  </Text>  
-                    {bankDetails?.bankName || ""}  
-                  </Text>  
-                  <Text style={styles.bankDetail}>  
-                    <Text style={styles.bold}>A/c No.            :  </Text>  
-                    {bankDetails?.accountNo || ""}  
-                  </Text>  
-                  <Text style={styles.bankDetail}>  
-                    <Text style={styles.bold}>Branch & IFSC Code :  </Text>  
-                    {bankDetails?.branchAndIFSC || ""}  
-                  </Text>  
-                  <Text style={styles.bankDetail}>  
-                    <Text style={styles.bold}>SWIFT Code         :  </Text>  
-                    {bankDetails?.swiftCode || ""}  
-                  </Text>  
-                </View>  
-                <View style={{ width: '25%', display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>  
-                  <Text style={{ fontSize: 9, fontFamily: 'Helvetica-Bold' }}>E. & O.E</Text>  
-                </View>  
-              </View>  
-            </View>  
-          </View>  
+          {/* Bank Details Section - Empty space on LEFT (17%), Bank details on RIGHT (83%) */}
+          <View style={styles.bankSection}>
+            <View style={styles.bankEmptyLeft}></View>
+            <View style={styles.bankDetailsRight}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <View style={{ width: '75%' }}>
+                  <Text style={styles.bankTitle}>Company's Bank Details</Text>
+                  <Text style={styles.bankDetail}>
+                    <Text style={styles.bold}>A/c Holder's Name  :  </Text>
+                    {bankDetails?.accountHolderName || ""}
+                  </Text>
+                  <Text style={styles.bankDetail}>
+                    <Text style={styles.bold}>Bank Name          :  </Text>
+                    {bankDetails?.bankName || ""}
+                  </Text>
+                  <Text style={styles.bankDetail}>
+                    <Text style={styles.bold}>A/c No.            :  </Text>
+                    {bankDetails?.accountNo || ""}
+                  </Text>
+                  <Text style={styles.bankDetail}>
+                    <Text style={styles.bold}>Branch & IFSC Code :  </Text>
+                    {bankDetails?.branchAndIFSC || ""}
+                  </Text>
+                  <Text style={styles.bankDetail}>
+                    <Text style={styles.bold}>SWIFT Code         :  </Text>
+                    {bankDetails?.swiftCode || ""}
+                  </Text>
+                </View>
+                <View style={{ width: '25%', display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
+                  <Text style={{ fontSize: 9, fontFamily: 'Helvetica-Bold' }}>E. & O.E</Text>
+                </View>
+              </View>
+            </View>
+          </View>
 
-          {/* Declaration and Signature */}  
-          <View style={styles.declarationSection}>  
-            {/* Declaration */}  
-            <View style={styles.declarationLeft}>  
-              <Text style={styles.declarationTitle}>Declaration</Text>  
-              <Text style={styles.declarationText}>  
-                We declare that this invoice shows the actual price of the goods{'
-'}  
-                described and that all particulars are true and correct.  
-              </Text>  
-            </View>  
+          {/* Declaration and Signature */}
+          <View style={styles.declarationSection}>
+            {/* Declaration LEFT */}
+            <View style={styles.declarationLeft}>
+              <Text style={styles.declarationTitle}>Declaration</Text>
+              <Text style={styles.declarationText}>
+                We declare that this invoice shows the actual price of the goods{'\n'}
+                described and that all particulars are true and correct.
+              </Text>
+            </View>
 
-            {/* Signature */}  
-            <View style={styles.signatureRight}>  
-              <Text style={styles.signatureCompany}>for {company?.name || "Sunshine Industries"}</Text>  
-              <View style={{ marginTop: 25 }}>  
-                <Text style={styles.signatureLine}>Authorised Signatory</Text>  
-              </View>  
-            </View>  
-          </View>  
+            {/* Signature RIGHT */}
+            <View style={styles.signatureRight}>
+              <Text style={styles.signatureCompany}>for {company?.name || "Sunshine Industries"}</Text>
+              <Text style={styles.signatureLine}>Authorised Signatory</Text>
+            </View>
+          </View>
 
-        </View>  
+        </View>
 
-        {/* Footer OUTSIDE the bordered box */}  
-        <View style={styles.footer}>  
-          <Text>This is a Computer Generated Invoice</Text>  
-        </View>  
+        {/* Footer OUTSIDE the bordered box */}
+        <View style={styles.footer}>
+          <Text>This is a Computer Generated Invoice</Text>
+        </View>
 
       </Page>
     </Document>
